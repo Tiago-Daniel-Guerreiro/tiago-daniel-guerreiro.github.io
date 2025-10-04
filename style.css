@@ -104,8 +104,8 @@
 
   @media (max-width: 400px) { 
     :root {
-      --btn-h: 2.1rem;
-      --icon-size: 1.15rem; /* Ícones um pouco maiores pois a maioria dos botões neste tamanho tem apenas icones */
+      --btn-h: 2.3rem;
+      --icon-size: 1.6rem; /* Ícones um pouco maiores pois a maioria dos botões neste tamanho tem apenas icones */
       --header-h: 50px;
       --padding-default-btn: 3px 0.5rem;
     }

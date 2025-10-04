@@ -323,9 +323,6 @@ const App = {
             // Separa as duas primeiras tags e junta com " · " mas se só houver uma simplesmente mostra essa
             let tagsParaCard = tagsArray.slice(0, 2).join(' · '); // O slice começa no índice 0 e vai até (mas não inclui) o índice 2 se ele existir
 
-            if (tagsArray.length > 2) // Se houver mais de duas tags, adiciona "..." no final
-                tagsParaCard += ' · ...';
-                
             return tagsParaCard;
         },
 

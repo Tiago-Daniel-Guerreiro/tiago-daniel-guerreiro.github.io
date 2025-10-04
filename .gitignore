@@ -1,5 +1,4 @@
 # Ignorar pastas e ficheiros desnecessários
 Antigo/
 assets/
-docs/
-teste/
+.gitignore
