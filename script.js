@@ -104,7 +104,7 @@ const App = {
     // Projetos - Gere a exibição de projetos em cards e a visualização do modal
     projetos: {
         // Controla se as setas de navegação das imagens do modal fazem loop ou simplesmente ficam ocultas quando chegam ao fim
-        ImagensEmLoop : true,
+        ImagensEmLoop : false,
 
         dadosProjetos: [
             {
@@ -188,6 +188,8 @@ const App = {
             miniaturasModal: null,
             detalhesModal: null,
             linksModal: null,
+            botaoProximo: null,
+            botaoAnterior: null,
         },
 
         // Inicializa o módulo de projetos - criando o modal, carregando os cards e vinculando eventos
@@ -247,6 +249,11 @@ const App = {
             this.elementos.miniaturasModal =        this.elementos.modal.querySelector('.modal-thumbnails');
             this.elementos.detalhesModal =          this.elementos.modal.querySelector('.modal-details-container');
             this.elementos.linksModal =             this.elementos.modal.querySelector('.modal-links');
+            this.elementos.miniaturasModal =        this.elementos.modal.querySelector('.modal-thumbnails');
+            this.elementos.detalhesModal =          this.elementos.modal.querySelector('.modal-details-container');
+            this.elementos.linksModal =             this.elementos.modal.querySelector('.modal-links');
+            this.elementos.botaoProximo =           this.elementos.modal.querySelector('.modal-arrow-next');
+            this.elementos.botaoAnterior =          this.elementos.modal.querySelector('.modal-arrow-prev');
         },
 
         // Cria o HTML para todos os cards de projeto e os insere no container principal
@@ -283,7 +290,7 @@ const App = {
 
             // retorna o HTML do card com os dados do projeto
             return `
-                <li class="project-card add-filter-brightness-115 add-shadow-sm">
+                <li class="project-card add-filter-brightness-90 add-shadow-sm">
                     <img src="${coverImage}" alt="Capa do projeto ${title}" class="card-image" loading="lazy">
                     <div class="card-content">
                         <p class="card-tags">${tagsParaCard}</p>
@@ -342,16 +349,11 @@ const App = {
         vincularEventosDoModal() {
             if (!this.elementos.modal) return;
 
-            const botaoFechar =     this.elementos.modal.querySelector('.modal-close-btn');
-            const botaoProximo =    this.elementos.modal.querySelector('.modal-arrow-next');
-            const botaoAnterior =   this.elementos.modal.querySelector('.modal-arrow-prev');
-            const overlay =         this.elementos.modal.querySelector('.modal-overlay');
-
-            botaoFechar.addEventListener('click', () => this.fecharModal());
-            overlay.addEventListener('click', () => this.fecharModal());
+            this.elementos.modal.querySelector('.modal-close-btn').addEventListener('click', () => this.fecharModal());
+            this.elementos.modal.querySelector('.modal-overlay').addEventListener('click', () => this.fecharModal());
             
-            botaoProximo.addEventListener('click', () => this.mudarImagemModal(this.estado.indiceImagemAtual + 1));
-            botaoAnterior.addEventListener('click', () => this.mudarImagemModal(this.estado.indiceImagemAtual - 1));
+            this.elementos.botaoProximo.addEventListener('click', () => this.mudarImagemModal(this.estado.indiceImagemAtual + 1));
+            this.elementos.botaoAnterior.addEventListener('click', () => this.mudarImagemModal(this.estado.indiceImagemAtual - 1));
 
             // Ao invés de adicionar um listener a cada miniatura, adiciona um só ao container e o método lida com a lógica
             this.elementos.miniaturasModal.addEventListener('click', (evento) => this.lidarCliqueMiniatura(evento));
@@ -516,7 +518,7 @@ const App = {
 
             listaDeImagens.forEach((urlDaImagem, indice) => {
                 const miniaturaHtml = `
-                    <button type="button" data-index="${indice}" class="add-filter-brightness-115">
+                    <button type="button" data-index="${indice}" class="add-filter-brightness-90">
                         <img src="${urlDaImagem}" alt="Miniatura ${indice + 1}" loading="lazy">
                     </button>`;
                 this.elementos.miniaturasModal.insertAdjacentHTML('beforeend', miniaturaHtml);
@@ -540,6 +542,8 @@ const App = {
                 else if (novoIndice < 0) // Se o novo índice for negativo
                     indiceCalculado = totalImagens - 1; // vamos para o final da lista
             }
+
+            this.estado.indiceImagemAtual = indiceCalculado;
 
             // Atualiza a imagem principal do modal
             this.elementos.imagemPrincipalModal.src = this.estado.imagensDoProjetoAtual[indiceCalculado];

@@ -957,14 +957,7 @@
     background: color-mix(in srgb, var(--surface) 92%, var(--text) 8%);
   }
 
-  .add-border-hover {
-    border: 1px solid transparent;
-  }
 
-  .add-border-hover:hover,
-  .add-border-hover:focus-visible {
-    border: 1px solid var(--text);
-  }
 
   .add-background-accent-high {
     background: var(--accent);
@@ -973,6 +966,15 @@
 
   .add-border { border: 2px solid var(--border); }
 
+  .add-border-accent-hover { border: 2px solid transparent }
+
+  .add-border-hover { border: 1px solid transparent; }
+
+  .add-border-hover:hover,
+  .add-border-hover:focus-visible {
+    border: 1px solid var(--text);
+  }
+  
   .add-border-accent-hover:hover { border: 2px solid var(--accent); }
 
   .add-background-hover:hover,
