@@ -3,11 +3,11 @@ const App = {
 
     // Lista de ações/módulos a inicializar
     acoes: {
-        0: () => App.revelar_scroll.init(),
-        1: () => App.tema.init(),
-        2: () => App.menu.init(),
+        0: () => App.projetos.init(),
+        1: () => App.revelar_scroll.init(),
         3: () => App.animacaoDeDigitacao.init(),
-        4: () => App.projetos.init(),
+        4: () => App.tema.init(),
+        5: () => App.menu.init(),
     },
 
     // Inicializa todos os módulos listados em 'acoes' com tratamento de erros individual para evitar falhas totais
@@ -371,12 +371,19 @@ const App = {
 
         // Lida com cliques dentro do container de projetos
         lidarCliqueNosProjetos(evento) {
-            const botaoClicado = evento.target.closest('.btn-project-details');
+            const card = evento.target.closest('.project-card');
 
-            if (!botaoClicado) return;
+            let id = null;
 
-            if (botaoClicado.dataset.projectId) // Verifica se o botão tem o atributo data-project-id
-                this.abrirModal(Number(botaoClicado.dataset.projectId)); // Converte o ID para número e abre o modal
+            if (card) { // Verifica se o clique foi dentro de um card
+                const btn = card.querySelector('.btn-project-details');
+
+                if (btn) // Verifica se o botão existe
+                    id = btn.dataset.projectId;
+            }
+
+            if (id) // Se um ID foi encontrado, abre o modal com esse projeto
+                this.abrirModal(Number(id));
         },
 
         // Lida com teclas pressionadas quando o modal está aberto
@@ -585,9 +592,9 @@ const App = {
         ConfigPadrao: {
             velocidadeEscrever: 120,
             velocidadeApagar: 80,
-            delayInicial: 500,
+            delayInicial: 1000,
             delayEntrePalavras: 1500,
-            delayAposLoop: 820,
+            delayAposLoop: 740,
             loop: true
         },
 
@@ -744,6 +751,10 @@ const App = {
             try {
                 localStorage.setItem('theme', novoTema);
             } catch {} // Se o localStorage não estiver disponível, apenas ignora.
+
+            // Verifica se a função inicializada no index.html existe
+            // Se existir, chama-a para atualizar a cor da barra do navegador
+            if (typeof setThemeColorByTheme === 'function') { setThemeColorByTheme(novoTema); }
         }
     }
 };

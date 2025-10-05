@@ -41,8 +41,8 @@
 
     /* Sombras */
     --text-shadow: 1.3px 0px 1px rgba(17, 24, 39, 0.1);
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-    --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+    --shadow-small: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-medium: 0 8px 24px rgba(0, 0, 0, 0.08);
 
     /* Fonte */
     --font-sans: Arial, sans-serif;
@@ -345,7 +345,7 @@
     justify-content: space-between;
     height: var(--header-h);
     background-color: var(--surface);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-small);
     border-bottom: 1px solid var(--border);
     flex-wrap: wrap;
     z-index: 1;
@@ -567,7 +567,7 @@
       align-items: center;
       border-radius: var(--radius);
       background: var(--surface);
-      box-shadow: var(--shadow-sm);
+      box-shadow: var(--shadow-small);
       border: 1px solid transparent;
     }
 
@@ -676,6 +676,7 @@
     width: 100%;
     justify-content: flex-start;
     cursor: default;
+    box-shadow: var(--shadow-medium);
   }
   
   /* --- A lógica complexa de nth-child foi removida --- */
@@ -701,7 +702,7 @@
       inline-size: max-content;
       padding: .5rem .75rem;
       border-radius: 8px;
-      box-shadow: var(--shadow-md);
+      box-shadow: var(--shadow-medium);
       max-inline-size: 25vw;
       text-align: center;
       line-height: 1.4;
@@ -743,6 +744,7 @@
 @layer layout.projetos {
   .projects-container {
     display: grid;
+    min-height: 400px;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Ajusta o número de colunas conforme o tamanho da tela */
     gap: 1.5rem;
   }
@@ -751,7 +753,7 @@
     background-color: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-small);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -760,7 +762,7 @@
 
   .project-card:hover {
     filter: brightness(115%);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-medium);
   }
 
   .card-image {
@@ -821,7 +823,7 @@
   .modal-content {
     background-color: var(--surface);
     border-radius: var(--radius);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-medium);
     width: min(100% - 2rem, 1000px);
     max-height: min(90vh, 900px);
     display: flex;
@@ -862,15 +864,16 @@
     object-fit: contain;
     display: block;
     background-color: var(--bg);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-small);
     resize: both;
   }
 
-  :is(.modal-arrow-prev, .modal-arrow-next) {
-    position: absolute;
-    top: 50%;
-    opacity: 0.6;
-    --icon-size: 2rem;
+  .modal-arrow-prev, .modal-arrow-next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      opacity: 0.6;
+      --icon-size: 2rem;
   }
 
   .modal-arrow-prev { left: 0.5rem; }
@@ -908,7 +911,6 @@
 
   @media (max-width: 600px) {
     .modal-title { font-size: var(--font-size);}
-
     .modal-body p, .modal-body li { font-size: var(--font-size); }
 
     .project-modal.active {
@@ -919,24 +921,23 @@
     }
 
     .modal-header, .modal-body { padding: 0.5rem; }
-
     .projects-container { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
   }
 
   @media (max-width: 400px) {
-    .modal-title { font-size: 0; }
 
     .modal-header {
-      padding: 0;
-      align-items: center; 
+      display: flex;
+      justify-content: center;
+      align-items: center;
       flex-direction: column;
-      padding-bottom: 5px;
+      padding: 0 0 5px 0;
       border-bottom: none;
       height: auto;
     }
-    .projects-container { grid-template-columns: fit-content(100%); }
 
-    .modal-body p, .modal-body li { font-size: var(--font-size); }
+    .modal-title { font-size: 0; }
+    .modal-close-btn { margin: 0 auto; }
   }
 
   @media (max-width: 300px) { /* Unica vez que o media query é aplicado a um tamanho diferente de 900px, 600px ou 400px, só que o modal não fique com proporções estranhas */
@@ -994,7 +995,7 @@
 
   .add-filter-brightness-115:hover { filter: brightness(115%); }
 
-  .add-shadow-sm { box-shadow: var(--shadow-sm); }
+  .add-shadow-sm { box-shadow: var(--shadow-small); }
 
   .remove-high-height {
     height: auto;
@@ -1182,6 +1183,7 @@
       margin-left: 1.5rem;
       padding-left: 0;
       width: auto;
+      box-shadow: var(--shadow-medium);
     }
     a::after {
       content: " (" attr(href) ")";

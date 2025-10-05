@@ -8,7 +8,7 @@
   <meta name="description" content="Portfólio do Tiago Guerreiro">
   <meta name="author" content="Tiago Guerreiro">
   <meta name="color-scheme" content="light dark">
-
+  <meta name="theme-color">
   <script> 
   (() => {
     const THEME_KEY = "theme";
@@ -27,6 +27,23 @@
         theme = "light";
 
     document.documentElement.dataset.theme = theme;
+
+    window.setThemeColorByTheme = function(theme) { // Defina a cor da barra do navegador (nem todos os navegadores suportam)
+      let color = '#f6f6f6'; // Cor para tema claro
+
+      if (theme === 'dark')
+        color = '#181825'; // Cor para tema escuro
+
+      let meta = document.querySelector('meta[name="theme-color"]');
+      if (!meta) {
+        meta = document.createElement('meta');
+        meta.name = 'theme-color';
+        document.head.appendChild(meta);
+      }
+      meta.setAttribute('content', color);
+    };
+
+      setThemeColorByTheme(theme);
   })();
   </script>
 
