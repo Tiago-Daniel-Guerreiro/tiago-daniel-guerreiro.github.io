@@ -45,8 +45,6 @@ const App = {
 
         // Ponto de entrada. Chama os outros métodos na ordem correta.
         init() {
-            document.documentElement.classList.add('js');
-            
             this.cacheElementos();
             this.vincularEventos();
             this.mostrarConteudo();

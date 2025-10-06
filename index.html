@@ -11,6 +11,8 @@
   <meta name="theme-color">
   <script> 
   (() => {
+    document.documentElement.classList.add('js'); // Adiciona a classe 'js' ao html para aplicar estilos específicos quando o JavaScript está ativo
+
     const THEME_KEY = "theme";
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     let theme;
