@@ -3,8 +3,9 @@ const App = {
 
     // Lista de ações/módulos a inicializar
     acoes: {
-        0: () => App.projetos.init(),
-        1: () => App.revelar_scroll.init(),
+        0: () => App.Scroll.init(),
+        1: () => App.projetos.init(),
+        2: () => App.revelar_scroll.init(),
         3: () => App.animacaoDeDigitacao.init(),
         4: () => App.tema.init(),
         5: () => App.menu.init(),
@@ -28,7 +29,103 @@ const App = {
         await new Promise(resolve => setTimeout(resolve, duration));
         button.disabled = false;
     },
-    
+    //Sistema de scroll inteligente - salva e restaura a posição do scroll
+    Scroll: {
+        // Guarda as configurações para fácil acesso e modificação
+        config: {
+            STORAGE_KEY: 'scrollPosition',
+            NAVIGATION_FLAG: 'manualNavigation',
+        },
+
+        // Armazena referências aos elementos da página para evitar buscas repetidas
+        elementos: {
+            mainContent: null,
+            headerLinks: null,
+        },
+
+        // Ponto de entrada. Chama os outros métodos na ordem correta.
+        init() {
+            document.documentElement.classList.add('js');
+            
+            this.cacheElementos();
+            this.vincularEventos();
+            this.mostrarConteudo();
+
+            // Aguarda todos os recursos (imagens, etc.) serem carregados
+            window.addEventListener('load', () => {
+                this.restorePosition();
+                this.mostrarConteudo();
+            });
+
+            // Garante que o main fica visível mesmo se o evento load não disparar
+            this.mostrarConteudo();
+
+            // Garante que o main fica visível mesmo se o evento load não disparar
+            setTimeout(() => {
+                this.mostrarConteudo();
+            }, 2000); // 2 segundos após init, como fallback
+        },
+
+        cacheElementos() { // Encontra os elementos do DOM e guarda suas referências.
+            this.elementos.mainContent = document.querySelector('main');
+            this.elementos.headerLinks = document.querySelectorAll('header a');
+        },
+
+        // Centraliza a configuração de todos os event listeners.
+        vincularEventos() {
+            // Salva a posição sempre que o usuário rolar a página
+            window.addEventListener('scroll', () => this.savePosition());
+
+            // Adiciona o comportamento de scroll suave aos links do header
+            this.elementos.headerLinks.forEach(link => {
+                link.addEventListener('click', (event) => this.handleLinkClick(event));
+            });
+        },
+
+        // Salva a posição Y atual no sessionStorage.
+        savePosition() { sessionStorage.setItem(this.config.STORAGE_KEY, window.scrollY); },
+
+        restorePosition() { // Restaura a posição do scroll ao recarregar a página.
+            // Se o utilizador navegou clicando em um link, não restauramos a posição, pois ele já está na posição correta
+            if (sessionStorage.getItem(this.config.NAVIGATION_FLAG)) {
+                sessionStorage.removeItem(this.config.NAVIGATION_FLAG); // Limpa a flag para futuras recargas
+                return;
+            }
+
+            const savedPosition = sessionStorage.getItem(this.config.STORAGE_KEY);
+            if (savedPosition) {
+                // Rola para a posição salva de forma instantânea
+                window.scrollTo({
+                    top: parseInt(savedPosition, 10),
+                    behavior: 'instant'
+                });
+            }
+        },
+        
+        // Intercepta o clique nos links para criar uma navegação suave e controlar o estado.
+        handleLinkClick(event) {
+            event.preventDefault(); // Impede o pulo brusco e a mudança na URL
+            
+            const targetId = event.currentTarget.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+
+            if (targetElement) {
+                sessionStorage.setItem(this.config.NAVIGATION_FLAG, 'true'); // Sinaliza que o próximo carregamento não deve restaurar a posição
+
+                // Rola suavemente até o elemento alvo se o usuário não tiver preferência por reduzir movimento
+                if (!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches))
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
+                else
+                    targetElement.scrollIntoView({ behavior: 'instant' });
+
+                history.pushState("", document.title, window.location.pathname + window.location.search); // Limpa a URL, removendo o #id-seccao
+            }
+        },
+
+        // Torna o conteúdo principal visível após o posicionamento.
+        mostrarConteudo() { if (this.elementos.mainContent) { this.elementos.mainContent.classList.add('visivel'); } },
+    },
+
     // Menu - Controla a abertura/fechamento do menu de navegação
     menu: {
         header: document.querySelector('.site-header'),
@@ -597,126 +694,161 @@ const App = {
             delayAposLoop: 740,
             loop: true
         },
+        elementos: null, 
 
         init() {
-            const elementos = document.querySelectorAll('.escrever');
-            if (elementos.length === 0) return;
+            this.elementos = document.querySelectorAll('.escrever');
+            if (this.elementos.length === 0) return;
 
-            // Verifica se o dispositivo é compatível e se o utilizador prefere movimento reduzido.
             const prefereMovimentoReduzido = window.matchMedia &&
-                                             window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-            elementos.forEach(elemento => {
-                const palavras = this.obterPalavras(elemento);
-                
-                if (palavras.length === 0) return; // Não faz nada se não houver palavras
-
-                if (prefereMovimentoReduzido) {
-                    // Se preferir movimento reduzido, define o texto estático e para.
+                                            window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefereMovimentoReduzido) {
+                this.elementos.forEach(elemento => {
+                    if (this.obterPalavras(elemento).length === 0) return;
                     this.definirTextoEstatico(elemento);
-                    return;
-                }
+                });
+                return;
+            }
+            
+            this.adicionarEventosDeImpressao(this.elementos); // Adiciona os eventos de impressão
 
-                // Inicia a animação assíncrona
-                this.iniciar(elemento, palavras, this.ConfigPadrao);
+            this.elementos.forEach(elemento => {
+                const palavras = this.obterPalavras(elemento);
+                if (palavras.length === 0) return;
+                
+                this.iniciar(elemento, palavras, this.ConfigPadrao); // Inicia a animação para cada elemento
             });
         },
-        
+
+        eventosDeImpressaoAdicionados : false, // Fora do objeto App.animacaoDeDigitacao, adicione uma flag global:
+
+        adicionarEventosDeImpressao() {
+            if (this.eventosDeImpressaoAdicionados) return;
+            this.eventosDeImpressaoAdicionados = true;
+
+            window.addEventListener('beforeprint', () => {
+                this.elementos.forEach(elemento => {
+                    elemento.dataset.animacaoPausada = 'true';
+                    this.definirTextoEstatico(elemento) // Escreve o texto "original"
+                });
+            });
+
+            window.addEventListener('afterprint', () => {
+                this.elementos.forEach(elemento => {
+                    delete elemento.dataset.animacaoPausada;
+                    elemento.classList.add('escrever');
+
+                    this.iniciar(elemento, this.obterPalavras(elemento), this.ConfigPadrao);
+                });
+            });
+        },
+
         definirTextoEstatico(elemento) {
             elemento.textContent = this.obterPalavrasOriginais(elemento);
-            elemento.classList.remove('a-piscar', 'escrever'); // Remove as classes de animação para garantir que o cursor não pisque.
+            elemento.classList.remove('a-piscar'); // Retira o piscar do "cursor"           
+            elemento.classList.remove('escrever'); // Retira o cursor e o estilo especifico do efeito
         },
 
         obterPalavras(elemento) {
-            // Tenta obter as palavras do atributo data-palavras
-            if (elemento.dataset.palavras) { // Se o atributo existe
+            if (elemento.dataset.palavras) {
                 try {
-                    // Tenta converter a string JSON para um array
                     const listaPalavras = JSON.parse(elemento.dataset.palavras);
-                    // Garante que é um array e não está vazio
                     if (Array.isArray(listaPalavras) && listaPalavras.length > 0) {
+                        // Garante que o texto original é guardado apenas uma vez
+                        if (!elemento.dataset.TextoOriginal) {
+                            this.GuardarTextoOriginal(elemento);
+                        }
                         return listaPalavras;
                     }
                 } catch (erro) {
-                    // Se o JSON for inválido, ignora e segue para o próximo método.
                     console.error("Erro ao processar data-palavras como JSON:", erro);
                 }
             }
-
-            this.definirTextoOriginal(elemento); // Garante que o texto original está definido
-            return this.obterPalavrasOriginais_Array(elemento); // Retorna um array com o texto ou um array vazio
+            // Só guarda o texto original se ainda não estiver guardado
+            if (!elemento.dataset.TextoOriginal) {
+                this.GuardarTextoOriginal(elemento);
+            }
+            return this.obterPalavrasOriginais_Array(elemento);
         },
 
-        definirTextoOriginal(elemento) {
+        GuardarTextoOriginal(elemento) {
             let textoOriginal = elemento.textContent.trim();
-
-            if(textoOriginal.length === 0) 
-                textoOriginal = ''; // Se o texto original estiver vazio, retorna array vazio
-            
-            elemento.dataset.TextoOriginal = textoOriginal; // Guarda o texto original para uso futuro
+            if(textoOriginal.length === 0) textoOriginal = '';
+            elemento.dataset.TextoOriginal = textoOriginal;
         },
 
         obterPalavrasOriginais(elemento) {
-            if (!elemento.dataset.TextoOriginal)     // Se o atributo não existe
-                this.definirTextoOriginal(elemento); // Garante que o atributo está definido
-            
-            return elemento.dataset.TextoOriginal; // Retorna um array com o texto original
+            if (!elemento.dataset.TextoOriginal) this.GuardarTextoOriginal(elemento);
+            return elemento.dataset.TextoOriginal;
         },
 
         obterPalavrasOriginais_Array(elemento) {
             return [this.obterPalavrasOriginais(elemento)];
         },
 
+        pausar (ms) { return new Promise(resolve => setTimeout(resolve, ms)); },
+
+        async escreverPalavra (elemento, velocidade, palavra) {
+            for (let i = 0; i < palavra.length; i++) {
+                if (elemento.dataset.animacaoPausada) return; // Verifica a flag antes de cada letra para parar mais rápida
+                elemento.textContent = palavra.substring(0, i + 1);
+                await this.pausar(velocidade);
+            }
+        },
+
+        async apagarPalavra (elemento, velocidade, palavra) {
+            for (let i = palavra.length; i > 0; i--) {
+                if (elemento.dataset.animacaoPausada) return; // Verifica a flag antes de cada letra
+                elemento.textContent = palavra.substring(0, i - 1);
+                await this.pausar(velocidade);
+            }
+        },
+
         async iniciar(elemento, palavras, config) {
-            if (palavras.length === 0) return;
+            
+            if (elemento.dataset.animacaoPausada) return; // Se a animação já estiver marcada como pausada, não inicia
 
-            const pausar = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-
-            // Funções auxiliares para clareza
-            const escreverPalavra = async (palavra) => {
-                for (let i = 0; i < palavra.length; i++) {
-                    elemento.textContent = palavra.substring(0, i + 1);
-                    await pausar(config.velocidadeEscrever);
-                }
-            };
-
-            const apagarPalavra = async (palavra) => {
-                for (let i = palavra.length; i > 0; i--) {
-                    elemento.textContent = palavra.substring(0, i - 1);
-                    await pausar(config.velocidadeApagar);
-                }
-            };
-
-            // Prepara o elemento
-            elemento.textContent = ''; // Limpa o conteúdo inicial
+            elemento.textContent = '';
             elemento.classList.add('a-piscar');
-            await pausar(config.delayInicial);
+            await this.pausar(config.delayInicial);
+            if (elemento.dataset.animacaoPausada) return; // Verifica após cada pausa
 
             // Loop principal
-            while (true) {
+            while (!elemento.dataset.animacaoPausada) { // O loop agora depende da flag!
                 for (let i = 0; i < palavras.length; i++) {
+                    // Verifica a flag antes de cada palavra
+                    if (elemento.dataset.animacaoPausada) break;
+
                     const palavra = palavras[i];
- 
-                    elemento.classList.remove('a-piscar');
-                    await escreverPalavra(palavra);
-
-                    elemento.classList.add('a-piscar');
-                    await pausar(config.delayEntrePalavras);
-
-                    // Condição de saída se o loop estiver desativado
-                    if (!config.loop && i === palavras.length - 1)
-                        return; // Termina a função
 
                     elemento.classList.remove('a-piscar');
-                    await apagarPalavra(palavra);
+
+                    await this.escreverPalavra(elemento, config.velocidadeEscrever, palavra);
+                    if (elemento.dataset.animacaoPausada) break;
+
                     elemento.classList.add('a-piscar');
-                    await pausar(config.velocidadeApagar / 2);
+                    await this.pausar(config.delayEntrePalavras);
+
+                    if (elemento.dataset.animacaoPausada) break;
+
+                    elemento.classList.remove('a-piscar');
+                    
+                    // Se não estiver em loop e for a última palavra, sai do loop
+                    if (!config.loop && i === palavras.length - 1) {
+                        elemento.classList.remove('escrever');
+                        return; // Sai da função completamente
+                    }
+
+                    await this.apagarPalavra(elemento, config.velocidadeApagar, palavra);
+                    if (elemento.dataset.animacaoPausada) break;
+
+                    elemento.classList.add('a-piscar');
+                    await this.pausar(config.velocidadeApagar / 2);
                 }
 
-                if (!config.loop) break; // Segurança extra, caso o return não seja atingido
-                
-                await pausar(config.delayAposLoop);
+                await this.pausar(config.delayAposLoop);
             }
+
         }
     },
 
