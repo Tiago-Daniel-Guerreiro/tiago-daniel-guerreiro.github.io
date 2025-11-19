@@ -39,7 +39,7 @@
     --header-h: 64px;
     --max-w: 72rem;
 
-    /* Sombras */
+  /* Sombras */
     --text-shadow: 1.3px 0px 1px rgba(17, 24, 39, 0.1);
     --shadow-small: 0 2px 3px rgba(0, 0, 0, 0.1);
     --shadow-medium: 0 2px 6px rgba(0, 0, 0, 0.2);
@@ -119,14 +119,14 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    transition: color-scheme 0.35s ease;
+    transition: color-scheme 0.25s ease;
 
     height: 100dvh;
     -webkit-tap-highlight-color: rgba(0,0,0,0);
   }
 
   body, .site-header, .site-nav, :is(button, .btn), li, .nav-item {
-    transition: background-color 0.95s ease, color 0.35s ease, border-color 0.55s ease;
+    transition: background-color 0.75s ease, color 0.25s ease, border-color 0.45s ease;
   }
 
   body {
@@ -193,6 +193,39 @@
   .textos-longos { 
     padding: 5px; 
     text-align: justify;
+  }
+
+  /* Estilos para blocos de código */
+  pre, code {
+    background: color-mix(in srgb, var(--accent) 8%, var(--surface));
+    color: var(--text);
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: calc(var(--font-size) * 0.9);
+  }
+
+  pre {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin: 1rem 0;
+    overflow-x: auto;
+    line-height: 1.4;
+  }
+
+  code {
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    color: var(--text);
+    word-break: break-all;
+  }
+
+  pre code {
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    color: var(--text-secondary);
+    word-break: normal; 
   }
 
   @media (max-width: 900px) {
@@ -343,6 +376,8 @@
 @layer layout.header {
   .site-header {
     position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -352,13 +387,15 @@
     border-bottom: 1px solid var(--border);
     flex-wrap: wrap;
     z-index: 1;
+    margin: 0;
+    padding: 0;
   }
 
   .header-inner {
     display: flex;
     align-items: center;
     max-width: var(--max-w);
-    padding: 0 1.5rem;
+    padding: 0 1rem 0 0;
     width: 100%;
     gap: 0.25em;
     margin: 0 auto;
@@ -395,7 +432,7 @@
   /* Layout Responsivo do Header */
   @media (max-width: 900px) {
     .site-header .nav-toggle { display: inline-flex; }
-    .header-inner { padding: 0 1rem; }
+    .header-inner { padding: 0 0.5rem 0 0; }
 
     .site-header .nav-list{ background-color: var(--surface); }
 
@@ -477,10 +514,9 @@
     }
 
     .site-header .theme-toggle { border-radius: var(--radius); }
-
     .site-nav ul { padding: 0 0 1rem 0; }
+    .header-inner { padding: 0 0.5rem 0 0; }
   }
-
 }
 
 @layer layout.global {
@@ -683,8 +719,6 @@
     cursor: default;
     box-shadow: var(--shadow-small);
   }
-  
-  /* --- A lógica complexa de nth-child foi removida --- */
 
   @media (hover: hover) and (pointer: fine) {
     .skills-list[data-desc] {
@@ -747,10 +781,11 @@
 }
 
 @layer layout.projetos {
+  #projetos { padding-top: 1.5rem; }
+
   .projects-container {
     display: grid;
-    min-height: 400px;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Ajusta o número de colunas conforme o tamanho da tela */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 1.5rem;
   }
 
@@ -761,13 +796,12 @@
     box-shadow: var(--shadow-small);
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.8s ease, border-color 0.7s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
-  .project-card:hover {
-    filter: brightness(115%);
-    transform: translateY(-4px);
-  }
+  .project-card:hover { transform: translateY(-4px); }
+  .project-card.no-image .card-image { display: none; }
+  .project-card.no-image .card-content { padding-top: 1rem; }
 
   .card-image {
     width: 100%;
@@ -790,13 +824,15 @@
   }
 
   .card-title {
-    font-size: var(--font-size);
+    font-size: 1.1rem; /* Título maior nos cards */
+    font-weight: 600;
     margin-bottom: 0.75rem;
   }
 
   .card-description {
     flex-grow: 1;
     margin-bottom: 1.5rem;
+    text-align: left;
   }
 
   /* Modal de detalhes do projeto */
@@ -835,25 +871,182 @@
     overflow: hidden;
     transform: scale(0.95);
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    position: relative;
+  }
+
+  /* Overlay que cobre toda a área para capturar clique fora do conteúdo */
+  .project-modal .modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: transparent;
+    cursor: default;
   }
 
   .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 1.5rem;
+    /* Layout do header: apenas título e botão fechar */
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: start;
+    column-gap: 0.75rem;
+    row-gap: 0;
+    padding: 0.85rem 1.5rem 0.9rem 1.5rem;
+    background: var(--surface);
+    min-height: var(--header-h);
+    box-sizing: border-box;
     border-bottom: 1px solid var(--border);
-    height: max(var(--header-h), auto);
   }
 
-  .modal-title { font-size: var(--font-size-subtitle); }
+  .modal-close-btn {
+    justify-self: end;
+    align-self: start;
+    position: static;
+    z-index: 2;
+  }
+
+  .modal-title { 
+    font-size: var(--font-size-subtitle);
+    font-weight:700; 
+    margin:0; 
+    display: block;
+    min-width: 0;
+  } 
+
+  .modal-tags  { 
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 0.7rem; 
+    align-items: center;
+    margin: 0; 
+    width: auto;
+    flex: 0 1 auto;
+    min-width: 0;
+    padding: 0;
+    min-height: 0;
+  }
+
+  .modal-tags-block {
+    margin: 1rem 0 1.85rem 0;
+    display: flex;
+    align-items: baseline; 
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    column-gap: 0.6rem;
+    row-gap: 0.4rem;
+  }
+
+  .modal-tags-title {
+    margin: 0;
+    font-size: var(--font-size);
+    color: var(--muted);
+    font-weight: 600;
+    white-space: nowrap; 
+    line-height: 1;
+    display: inline-flex; 
+    align-items: center;
+  }
+
+  .modal-header-tag, .readme-tag {
+    display: inline-flex; 
+    align-items: center;
+    vertical-align: middle;
+    background: color-mix(in srgb, var(--accent) 8%, var(--surface)); 
+    padding: 6px 12px; 
+    border-radius: 25px; 
+    color: var(--text); 
+    line-height: 1; 
+  }
+
+  .modal-body p, .modal-body li, .modal-body blockquote { 
+    line-height: 1.8; 
+    margin: 0;
+  }
+
+  /* Espaçamento entre parágrafos no modal */
+  .modal-body p { margin: 0 0 1rem 0; }
+
+  .modal-section-separator 
+  { 
+    border: 0; 
+    border-top: 1px solid var(--border); 
+    margin: 0.8rem 0; 
+  }
+
+  /* Estilo para <b> gerado a partir de ** em markdown: usa destaque mas sem transformar para maiúsculas */
+  .modal-body b { 
+    font-weight: 700; 
+    text-transform: none; 
+    color: var(--text); 
+  }
+
+  /* Links dentro do modal devem ficar "normais" e com cor de destaque */
+  .modal-body a { 
+    font-weight: 400; 
+    color: var(--accent); 
+    text-decoration: underline; 
+  }
+
+  /* Restaurar marcadores de lista dentro do modal (reset global remove-os) */
+  .modal-body :is(ul, ol) {
+    list-style: disc outside;
+    padding-left: 1.4rem;
+    margin: 0.75rem 0 1rem;
+  }
+
+  .modal-body ol { list-style: decimal outside; }
+
+  .modal-body li {
+    margin: 0.3rem 0; /* Espaço vertical padronizado */
+    line-height: 1.45; /* Leve ajuste para reduzir altura extra */
+  }
+
+  /* Espaçamento uniforme apenas entre itens consecutivos */
+  .modal-body li + li { margin-top: 0.3rem; }
+
+  /* Listas aninhadas: ligeiramente menos recuo e margem inferior menor */
+  .modal-body :is(ul, ol) :is(ul, ol) {
+    margin: 0.5rem 0 0.75rem;
+    padding-left: 1.2rem;
+  }
+
+  /* Remove margem superior dos parágrafos dentro de <li> para evitar bullet deslocado */
+  .modal-body li > p:first-child { margin-top: 0; }
+
+  /* Caso o primeiro filho não seja <p>, garantimos também zero margem */
+  .modal-body li > :first-child { margin-top: 0; }
+
+  /* Se algum <br> escapar no início de um <li>, escondemos para evitar linha vazia após o marcador */
+  .modal-body li > br:first-child { display: none; }
+
+  /* Garantir que h2 tenham espaçamento superior quando não são o primeiro elemento */
+  .modal-body h2:not(:first-child) { margin-top: 1.75rem; }
+  .modal-body h2 { margin-bottom: 1rem; }
+
+  /* Forçar que o marcador seja visível (override do reset li::marker) */
+  .modal-body li::marker {
+    content: revert;
+    color: revert;
+  }
 
   .modal-body {
     overflow-y: auto;
     padding: 0.5rem 1.5rem;
   }
 
-  .modal-section { margin-bottom: 1.5rem; }
+  .modal-section { 
+    margin-bottom: 1.5rem; 
+    padding-inline: 0.5rem;
+  }
+
+  .modal-body h2 { margin-top: 1rem; }
+
+  .modal-body .modal-section:first-of-type > h2 {
+    margin-top: 0; 
+    padding-top: 0;
+  }
+
+  /* Reduzir espaçamento excessivo entre parágrafos */
+  .modal-body p:empty { display: none; }
 
   .modal-image-viewer {
     position: relative;
@@ -901,6 +1094,10 @@
     object-fit: contain;
   }
 
+  /* Imagem principal fica invisível quando está marcada como quebrada */
+  .modal-main-image.is-broken { display: none; }
+  .modal-images-section.hidden { display: none; }
+
   .modal-project-tags {
     display: flex;
     flex-wrap: wrap;
@@ -924,24 +1121,19 @@
       margin: 0;
     }
 
-    .modal-header, .modal-body { padding: 0.5rem; }
-    .projects-container { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+    /* Com grid, não precisamos reservar espaço para o X via padding */
+    .modal-header { padding: 0.6rem 0.75rem 0.85rem 0.75rem; }
+    .modal-title { min-width: 0; }
+    .modal-body { padding: 0.5rem; }
   }
 
   @media (max-width: 400px) {
-
     .modal-header {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      padding: 0 0 5px 0;
-      border-bottom: none;
+      padding: 0.55rem 0.6rem 0.75rem 0.6rem; 
+      row-gap: 0.4rem;
       height: auto;
     }
-
-    .modal-title { font-size: 0; }
-    .modal-close-btn { margin: 0 auto; }
+    .modal-title { font-size: var(--font-size); }
   }
 
   @media (max-width: 300px) { /* Unica vez que o media query é aplicado a um tamanho diferente de 900px, 600px ou 400px, só que o modal não fique com proporções estranhas */
@@ -961,8 +1153,6 @@
     filter: brightness(200%) contrast(80%);
     background: color-mix(in srgb, var(--surface) 92%, var(--text) 8%);
   }
-
-
 
   .add-background-accent-high {
     background: var(--accent);

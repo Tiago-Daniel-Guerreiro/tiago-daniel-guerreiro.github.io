@@ -9,6 +9,7 @@ const App = {
         3: () => App.animacaoDeDigitacao.init(),
         4: () => App.tema.init(),
         5: () => App.menu.init(),
+        6: () => App.easter_egg.init(),
     },
 
     // Inicializa todos os módulos listados em 'acoes' com tratamento de erros individual para evitar falhas totais
@@ -198,72 +199,68 @@ const App = {
     
     // Projetos - Gere a exibição de projetos em cards e a visualização do modal
     projetos: {
-        // Controla se as setas de navegação das imagens do modal fazem loop ou simplesmente ficam ocultas quando chegam ao fim
-        ImagensEmLoop : false,
-
-        dadosProjetos: [
+        "ImagensEmLoop": false,
+        "dadosProjetos": [
             {
-                id: 1,
-                title: 'Quiosque Digital (Estágio)',
-                coverImage: '/assets/projetos/quiosque/capa.webp',
-                images: [
-                    '/assets/projetos/quiosque/1.webp',
-                    '/assets/projetos/quiosque/2.webp',
-                    '/assets/projetos/quiosque/3.webp',
-                ],
-                githubLink: 'https://github.com/Tiago-Daniel-Guerreiro/AppParaQuiosque',
-                demoLink: null,
-                details: [
-                    { order: 1, type: 'tags',           title: 'Tecnologias Utilizadas',content: ['C#', 'Windows Forms'] },
-                    { order: 2, type: 'description',    title: 'Objetivo Principal',    content: "...", showInModal: true },
-                    { order: 3, type: 'text',           title: 'O Problema',            content: "..." },
-                    { order: 4, type: 'text',           title: 'A Solução',             content: "..." },
-                    { order: 5, type: 'text',           title: 'Meu Papel',             content: "..." },
-                    { order: 6, type: 'text',           title: 'Principais Desafios',   content: "..." },
-                    { order: 7, type: 'text',           title: 'Resultados',            content: "..." }
-                ]
+                "id": 1,
+                "repo": "IpShared",
+                "coverImage": null,
+                "images": null,
+                "demoLink": null,
+                "tags": ["C#", "Avalonia UI", "Multiplataforma"]
             },
             {
-                id: 2,
-                title: 'Sistema de Agendamentos Web (Projeto Escolar)',
-                coverImage: '/assets/projetos/agendamentos/capa.webp',
-                images: [
-                    '/assets/projetos/agendamentos/1.webp',
-                    '/assets/projetos/agendamentos/2.webp',
-                    '/assets/projetos/agendamentos/3.webp'
+                "id": 2,
+                "repo": "AppDeQuiosque",
+                "coverImage": "/assets/projetos/quiosque/capa.webp",
+                "images": [
+                    "/assets/projetos/quiosque/1.webp",
+                    "/assets/projetos/quiosque/2.webp",
+                    "/assets/projetos/quiosque/3.webp"
                 ],
-                githubLink: 'https://github.com/Tiago-Daniel-Guerreiro/Site-Agendamentos',
-                demoLink: 'https://site-agendamentos.great-site.net/',
-                details: [
-                    { order: 1, type: 'tags',           title: 'Tecnologias Utilizadas',        content: ['PHP', 'MySQL', 'HTML', 'CSS'] },
-                    { order: 2, type: 'description',    title: 'Objetivo Principal',            content: "...", showInModal: true },
-                    { order: 3, type: 'text',           title: 'Contexto Académico',            content: "..." },
-                    { order: 4, type: 'text',           title: 'Foco Backend',                  content: "..." },
-                    { order: 5, type: 'text',           title: 'Funcionalidades Implementadas', content: "..." },
-                    { order: 6, type: 'text',           title: 'Desafios Técnicos',             content: "..." },
-                    { order: 7, type: 'text',           title: 'Aprendizagens',                 content: "..." }
-                ]
+                "demoLink": null,
+                "tags": ["C#", "Windows Forms", "JSON"]
             },
             {
-                id: 3,
-                title: 'Leitor de Mangás Online (Projeto Escolar)',
-                coverImage: '/assets/projetos/mangas/capa.webp',
-                images: [
-                    '/assets/projetos/mangas/1.webp',
-                    '/assets/projetos/mangas/2.webp',
-                    '/assets/projetos/mangas/3.webp'
-                ],
-                githubLink: 'https://github.com/Tiago-Daniel-Guerreiro/Site-Manga',
-                demoLink: 'https://tiago-daniel-guerreiro.github.io/Site-Manga/',
-                details: [
-                    { order: 1, type: 'tags',           title: 'Tecnologias Utilizadas',    content: ['JavaScript', 'CSS', 'HTML'] },
-                    { order: 2, type: 'description',    title: 'Objetivo Principal',        content: "...", showInModal: true },
-                    { order: 3, type: 'text',           title: 'Contexto Académico',        content: "..." },
-                    { order: 4, type: 'text',           title: 'Foco Frontend',             content: "..." },
-                    { order: 5, type: 'text',           title: 'Funcionalidades JavaScript',content: "..." },
-                    { order: 6, type: 'text',           title: 'Desafios de Interface',     content: "..." },
-                    { order: 7, type: 'text',           title: 'Aprendizagens',             content: "..." }
-                ]
+                "id": 3,
+                "repo": "SistemaHospitalar",
+                "coverImage": null,
+                "images": null,
+                "demoLink": null,
+                "tags": ["Python"]
+            },
+            {
+                "id": 4,
+                "repo": "tiago-daniel-guerreiro.github.io",
+                "coverImage": null,
+                "images": null,
+                "demoLink": "https://tiago-daniel-guerreiro.github.io",
+                "tags": ["CSS", "JavaScript","HTML"],
+                "showInCards": false
+            },
+            {
+                "id": 5,
+                "repo": "Site-Manga",
+                "coverImage": null,
+                "images": null,
+                "demoLink": "https://tiago-daniel-guerreiro.github.io/Site-Manga/",
+                "tags": ["JavaScript","CSS","HTML"]
+            },
+            {
+                "id": 6,
+                "repo": "Site-Agendamentos",
+                "coverImage": "",
+                "images": null,
+                "demoLink": "site-agendamentos.great-site.net",
+                "tags": ["PHP", "MySQL"]
+            },
+            {
+                "id": 7,
+                "repo": "SistemaDeGestaoDeBiblioteca",
+                "coverImage": null,
+                "images": null,
+                "demoLink": null,
+                "tags": ["Python", "JSON"]
             }
         ],
         
@@ -288,25 +285,89 @@ const App = {
         },
 
         // Inicializa o módulo de projetos - criando o modal, carregando os cards e vinculando eventos
-        init() {
+        async init() {
             this.criarEstruturaModal();
+
+            // Tenta carregar dados pré-buscados (gerados pelo script Python) para evitar chamadas ao GitHub em runtime
+            try {
+                await this.loadLocalGithubData();
+            } catch (e) {
+                // se falhar, continuamos com os dados locais definidos no código
+                console.info('loadLocalGithubData falhou ou não existe (ok):', e.message);
+            }
+
+            // Gera os cards usando função dedicada
             this.CarregarCardsDeProjetos();
+            this.RegistarFalhasNoCarregamentoDeImagens();
             this.vincularEventos();
         },
 
-        // Encontra um projeto no array de dados pelo seu ID
-        obterProjetoPorId(idDoProjetoParaEncontrar) {
+        // Tenta ler o arquivo gerado pelo script Python (data/github_projects.json)
+        async loadLocalGithubData() {
+            const path = '/data/github_projects.json';
+            let resp;
 
-            // Loop por cada projeto até encontrar o ID correspondente
-            const projetoEncontrado = this.dadosProjetos.find(projeto => {
-                // Retorna true se for o projeto que estamos a procurar
-                return projeto.id === idDoProjetoParaEncontrar; 
-            });
+            try {
+                resp = await fetch(path, { cache: 'no-cache' });
+            } catch (e) { throw e; }
 
-            // Retorna o objeto do projeto que foi encontrado, ou 'undefined' se não encontrou nenhum.
-            return projetoEncontrado;
+            if (!resp.ok) { throw new Error(`HTTP ${resp.status}`); }
+
+            const projects = await resp.json();
+
+            if (!Array.isArray(projects)) return;
+
+            for (const repoInfo of projects) {
+                // Para cada item do json, tenta encontrar o projeto correspondente nos dados locais
+                if (!repoInfo.repo) continue;
+
+                const projetoLocal = this.obterProjetoPorRepo(repoInfo.repo);
+
+                if (!projetoLocal) continue;
+
+                // Adiciona os campos pré-processados ao projeto local
+                if (repoInfo.description) projetoLocal.description = repoInfo.description;
+                if (repoInfo.link) projetoLocal.githubLink = repoInfo.link;
+                if (repoInfo.title) projetoLocal.title = repoInfo.title;
+                if (repoInfo.description_html) projetoLocal.description_html = repoInfo.description_html;
+            }
         },
 
+        /**
+         * Converte caracteres especiais em entidades HTML para impedir injeção de código
+         * e quebra da marcação quando o conteúdo vem de fontes externas (ex: README, tags).
+         * Escapa:
+         *  &  -> &amp;
+         *  <  -> &lt;
+         *  >  -> &gt;
+         *  "  -> &quot;
+         *  '  -> &#39;
+         * Retorna string vazia se str for null/undefined/falsy.
+         */
+        escapeHtml(str) {
+            if (!str) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        },
+
+        // Encontra um projeto pelo nome do repositório (repo). Retorna undefined se não achar.
+        obterProjetoPorRepo(repo) {
+            if (!repo) return undefined;
+            const repo_formatado = String(repo).toLowerCase();
+            return this.dadosProjetos.find(p =>
+                p && p.repo && p.repo.toLowerCase() === repo_formatado
+            );
+        },
+
+        // Encontra um projeto pelo id numérico. Retorna undefined se não achar.
+        obterProjetoPorId(id) {
+            if (id == null) return undefined;
+            return this.dadosProjetos.find(p => p && p.id === id);
+        },
         // Cria o HTML do modal, insere no body e guarda as referências aos seus elementos
         criarEstruturaModal() {
             if (document.querySelector('.project-modal')) return;
@@ -317,7 +378,7 @@ const App = {
                     <div class="modal-content">
                         <div class="modal-header">
                             <h2 class="modal-title"></h2>
-                            <button class="btn add-border add-background-hover icon-only-close modal-close-btn"></button>
+                            <button class="btn add-border add-background-hover icon-only-close modal-close-btn" aria-label="Fechar"></button>
                         </div>
                         <div class="modal-body">
                             <section class="modal-images-section">
@@ -328,6 +389,10 @@ const App = {
                                 </div>
                                 <div class="modal-thumbnails"></div>
                             </section>
+                            <div class="modal-tags-block">
+                                <h3>Tags:</h3>
+                                <div class="modal-tags"></div>
+                            </div>
                             <div class="modal-details-container"></div>
                             <div class="modal-links"></div>
                         </div>
@@ -340,92 +405,129 @@ const App = {
             // Guarda as referências para não ter que procurar na página novamente
             this.elementos.modal =                  document.querySelector('.project-modal');
             this.elementos.tituloModal =            this.elementos.modal.querySelector('.modal-title');
+            this.elementos.modalTagsBlock =        this.elementos.modal.querySelector('.modal-tags-block');
+            this.elementos.modalTags =              this.elementos.modal.querySelector('.modal-tags');
+            this.elementos.modalCloseBtn =          this.elementos.modal.querySelector('.modal-close-btn');
             this.elementos.imagemPrincipalModal =   this.elementos.modal.querySelector('.modal-main-image');
-            this.elementos.miniaturasModal =        this.elementos.modal.querySelector('.modal-thumbnails');
-            this.elementos.detalhesModal =          this.elementos.modal.querySelector('.modal-details-container');
-            this.elementos.linksModal =             this.elementos.modal.querySelector('.modal-links');
             this.elementos.miniaturasModal =        this.elementos.modal.querySelector('.modal-thumbnails');
             this.elementos.detalhesModal =          this.elementos.modal.querySelector('.modal-details-container');
             this.elementos.linksModal =             this.elementos.modal.querySelector('.modal-links');
             this.elementos.botaoProximo =           this.elementos.modal.querySelector('.modal-arrow-next');
             this.elementos.botaoAnterior =          this.elementos.modal.querySelector('.modal-arrow-prev');
-        },
-
-        // Cria o HTML para todos os cards de projeto e os insere no container principal
-        CarregarCardsDeProjetos() {
-            if (!this.elementos.containerProjetos) return; // Verifica se o container existe
-
-            // String vazia que vai juntar todo o HTML.
-            let htmlDeTodosOsCards = '';
-
-            // Percorre cada 'projeto' no array 'dadosProjetos'.
-            for (const projeto of this.dadosProjetos) {
-                
-                // Para cada projeto, chama a função que cria o HTML do seu card.
-                const htmlDoCardAtual = this.criarHtmlDoCard(projeto);
-
-                // Adiciona o HTML do card atual à string principal.
-                htmlDeTodosOsCards += htmlDoCardAtual;
+            this.elementos.modalImagesSection =     this.elementos.modal.querySelector('.modal-images-section');
+            if (this.elementos.imagemPrincipalModal) {
+                // Marca imagem como quebrada para que fique invisível até encontrarmos uma válida
+                this.elementos.imagemPrincipalModal.addEventListener('error', () => {
+                    this.elementos.imagemPrincipalModal.classList.add('is-broken');
+                    this.tentarAvancarImagemOuOcultar();
+                });
+                // Ao carregar com sucesso, garante que fica visível
+                this.elementos.imagemPrincipalModal.addEventListener('load', () => {
+                    this.elementos.imagemPrincipalModal.classList.remove('is-broken');
+                });
             }
 
-            // Após o loop terminar, insere a string completa no container de uma só vez.
-            this.elementos.containerProjetos.innerHTML = htmlDeTodosOsCards;
+            // Clique fora (overlay) fecha o modal
+            const overlay = this.elementos.modal.querySelector('.modal-overlay');
+            if (overlay) overlay.addEventListener('click', () => this.fecharModal());
+
+            // Extra: clique direto no container fora do conteúdo também fecha
+            this.elementos.modal.addEventListener('click', (e) => {
+                if (e.target === this.elementos.modal) this.fecharModal();
+            });
         },
-        
-        // Cria o HTML para um único card de projeto
-        criarHtmlDoCard(projeto){
-            const { id, title, coverImage, details } = projeto;
 
-            let descricao = this.ObterDescricao(details); // Obtém a descrição completa, assumindo que por padrão é > 100 caracteres
+        _extrairTextoPlano(html) {
+            if (!html) return '';
+            const div = document.createElement('div');
+            div.innerHTML = String(html);
+            const txt = div.textContent || div.innerText || '';
+            return txt.replace(/\s+/g, ' ').trim(); // Remove múltiplos espaços e quebras de linha
+        },
 
-            if(descricao.length > 100) // Se for maior que 100 caracteres, corta e adiciona "..."
-                descricao = `${descricao.substring(0, 100)}...`;
+        // Decide a melhor descrição para o card e limita aos 'maxLen' primeiros caracteres
+        _obterDescricaoParaCard(projeto, maxLen) {
+            let texto = '';
+            // Descrição vinda do GitHub (plain text)
+            if (projeto.description && String(projeto.description).trim() !== '') {
+                texto = String(projeto.description).trim();
+            }
+            // Caso não esteja disponivel usa HTML do README já convertido (description_html) → texto plano
+            else if (projeto.description_html && String(projeto.description_html).trim() !== '')
+                texto = this._extrairTextoPlano(projeto.description_html);
+            
+            let limite = 200;
+            if (typeof maxLen === 'number' && maxLen > 0 )
+                limite = maxLen;
 
-            const tagsParaCard = this.ObterTagsParaCard(details); // Obtém as tags formatadas para o card
+            if (texto.length > limite) 
+                texto = texto.slice(0, limite) + '...';
 
-            // retorna o HTML do card com os dados do projeto
+            return texto;
+        },
+
+        // Cria o HTML para um card de projeto individual
+        criarHtmlDoCard(projeto) {
+            // Usar título do README primeiro, se não existir usa o do repositório e em ultimo caso usa um padrão
+            const tituloCard = projeto.title || projeto.repo || 'Projeto sem título';
+
             return `
-                <li class="project-card add-filter-brightness-90 add-shadow-sm">
-                    <img src="${coverImage}" alt="Capa do projeto ${title}" class="card-image" loading="lazy">
+                <li class="project-card add-filter-brightness-115 add-shadow-sm">
+                    <img src="${projeto.coverImage || ''}" alt="Capa do projeto ${this.escapeHtml(tituloCard)}" class="card-image" loading="lazy">
                     <div class="card-content">
-                        <p class="card-tags">${tagsParaCard}</p>
-                        <h3 class="card-title">${title}</h3>
-                        <p class="card-description">${descricao}</p>
-                        <button class="btn add-size-medium add-background-accent-high btn-project-details" data-project-id="${id}">Ver detalhes</button>
+                        <p class="card-tags">${this.escapeHtml(this.obterTagsParaCard(projeto))}</p>
+                        <h3 class="card-title">${this.escapeHtml(tituloCard)}</h3>
+                        <p class="card-description">${this.escapeHtml(this._obterDescricaoParaCard(projeto))}</p>
+                        <button class="btn add-size-medium add-background-accent-high btn-project-details" data-project-id="${projeto.id}">Ver detalhes</button>
                     </div>
                 </li>
             `;
         },
-
-        // Função para obter o texto a descrição do array de detalhes
-        ObterDescricao (details) {
-            for (const detalhe of details) {
-                if (detalhe.type === 'description') {
-                    return detalhe.content;
-                }
-            }
-            return '';
+        // Responsável por montar a lista de cards de projetos no container
+        CarregarCardsDeProjetos() {
+            if (!this.elementos.containerProjetos) return;
+            const htmlCards = this.dadosProjetos
+                .filter(p => p && p.showInCards !== false)
+                .map(p => this.criarHtmlDoCard(p)).join('');
+            this.elementos.containerProjetos.innerHTML = htmlCards;
         },
 
-        // Função para obter o texto a descrição do array de detalhes
-        ObterTags (details) {
-            for (const detalhe of details) {
-                if (detalhe.type === 'tags') {
-                    if(detalhe.content && Array.isArray(detalhe.content)) // Verifica se é um array ou se existe
-                        return detalhe.content; // Retorna o array de tags se existir
-                }
-            }
+        // Obtém as tags de um projeto
+        obterTags(projeto) {
+            if (Array.isArray(projeto?.tags))
+                return projeto.tags;
+
             return [];
         },
+        
+        // Gera o texto das tags para exibir no card (máximo 2)
+        obterTagsParaCard(projeto) {
+            const tags = this.obterTags(projeto);
+            if (!Array.isArray(tags) || tags.length === 0) 
+                return '';
+            return tags.slice(0, 2).join(' · ');
+        },
 
-        // Formata as tags para exibição no card do projeto
-        ObterTagsParaCard (details) {
-            const tagsArray = this.ObterTags(details); // Obtém o array de tags
+        // Gera o HTML para os links de demonstração e GitHub
+        gerarHtmlLinks(demoLink, githubLink, repositorio) {
+            const normalizar = (u) => {
+                if (!u) 
+                    return null;
+                let url = String(u).trim();
+                if (!url) 
+                    return null;
+                if (!/^https?:\/\//i.test(url)) 
+                    url = 'https://' + url;
 
-            // Separa as duas primeiras tags e junta com " · " mas se só houver uma simplesmente mostra essa
-            let tagsParaCard = tagsArray.slice(0, 2).join(' · '); // O slice começa no índice 0 e vai até (mas não inclui) o índice 2 se ele existir
-
-            return tagsParaCard;
+                return url;
+            };
+            const demo = normalizar(demoLink);
+            let github = normalizar(githubLink);
+            if (!github && repositorio) github = `https://github.com/Tiago-Daniel-Guerreiro/${encodeURIComponent(repositorio)}`;
+            let html = '';
+            if (github) html += ` <a href="${this.escapeHtml(github)}" target="_blank" rel="noopener noreferrer" class="btn add-background-accent-high add-background-accent-hover add-border-accent-hover icon-left-github">GitHub</a>`;
+            if (demo) html += ` <a href="${this.escapeHtml(demo)}" target="_blank" rel="noopener noreferrer" class="btn add-background-accent-high add-background-accent-hover add-border-accent-hover icon-left-external">Demonstração</a>`;
+            return html;
         },
 
         // Centraliza a configuração de todos os event listeners da página
@@ -503,32 +605,45 @@ const App = {
                 return;
 
             this.estado.projetoAtual = projeto; // Define o estado
+            this.estado.tentativasErroImagem = 0; // reset contador de fallback
             
-            // Inicia uma nova lista (array) com a imagem de capa como primeiro item
-            let listaDeImagens = [projeto.coverImage];
-
-            for (const imagem of projeto.images) { // Percorre cada imagem na lista das imagens do projeto
-               
-                if (listaDeImagens.includes(imagem)) // Verifica se a imagem já está na lista
-                    continue; // Se já estiver, ignora e passa para a próxima imagem.
-
-                // Adiciona cada uma dessas imagens, usando o método .push() para adicionar ao final do array
-                listaDeImagens.push(imagem);
-            }
-
-            // No final, atribui a lista completa, já combinada, ao estado.
-            this.estado.imagensDoProjetoAtual = listaDeImagens;
+            // Prepara lista de imagens segura (tratando null, [], [""], undefined)
+            this.estado.imagensDoProjetoAtual = this._prepararListaDeImagens(projeto);
 
             this.estado.indiceImagemAtual = 0;
+
+            // Garantir que a secção de imagens está visível e limpa de estados anteriores
+            if (this.elementos.modalImagesSection)
+                this.elementos.modalImagesSection.classList.remove('hidden');
+            
+            if (this.elementos.imagemPrincipalModal)
+                this.elementos.imagemPrincipalModal.classList.remove('is-broken');
 
             // Preenche o conteúdo
             this.preencherConteudoDeTextoDoModal(projeto);
             this.carregarMiniaturasAsync(this.estado.imagensDoProjetoAtual);
-            this.mudarImagemModal(0); // Mostra a primeira imagem
+            if (this.estado.imagensDoProjetoAtual.length > 0)
+                this.mudarImagemModal(0); // Mostra a primeira imagem válida
+            else
+                this._ocultarViewerPorFalha();
 
             // Torna o modal visível
             this.elementos.modal.classList.add('active');
             document.body.style.overflow = 'hidden'; // Trava o scroll da página
+        },
+
+        // Sanitiza e normaliza a lista de imagens de um projeto (cover + images)
+        _prepararListaDeImagens(projeto) {
+            let resultados = [];
+            const adicionar = (valor) => {
+                if (typeof valor !== 'string') return;
+                const limpo = valor.trim();
+                if (!limpo) return;
+                resultados.push(limpo);
+            };
+            adicionar(projeto.coverImage);
+            if (Array.isArray(projeto.images)) for (const img of projeto.images) adicionar(img);
+            return resultados;
         },
 
         // Fecha o modal e limpa o estado.
@@ -542,76 +657,7 @@ const App = {
             this.estado.projetoAtual = null;
             this.estado.imagensDoProjetoAtual = [];
             this.elementos.miniaturasModal.innerHTML = ''; // Limpa miniaturas
-        },
-
-        // Processa a lista de detalhes de um projeto e gera o HTML completo
-        gerarHtmlDetalhes(details) {
-            if (!Array.isArray(details) || details.length === 0) 
-                return ''; // Se não houver detalhes, retorna uma string vazia.
-
-            // Cria uma lista vazia para guardar apenas os detalhes que queremos mostrar.
-            let detalhesParaMostrar = [];
-
-            for (const detalhe of details) { // Loop por cada detalhe na lista original.
-
-                if (detalhe.showInModal === false)
-                     continue; // Ignora o detalhe se 'showInModal' for false.
-                
-                // push é usado para adicionar um item ao final do array.
-                // mas também poderíamos usar detalhesParaMostrar[detalhesParaMostrar.length] = detalhe;
-                detalhesParaMostrar.push(detalhe); // Adiciona o detalhe à lista se 'showInModal' for true ou indefinido.
-            }
-
-            // Ordena a lista que acabámos de criar com base na propriedade 'order'.
-            detalhesParaMostrar.sort((a, b) => (a.order || 0) - (b.order || 0)); // Ordenação crescente, valores indefinidos são tratados como 0.
-
-            let htmlFinal = ''; // Cria uma string vazia para juntar todo o HTML.
-
-            for (const detalhe of detalhesParaMostrar) { // Loop por cada detalhe na lista
-                htmlFinal += this.gerarHtmlParaDetalhe(detalhe);  // Adiciona o HTML de cada detalhe à string final.
-            }
-
-            return htmlFinal; // Retorna a string do HTML completo.
-        },
-
-        gerarHtmlParaDetalhe(detalhe) {
-            // Gera o HTML para um único detalhe do projeto
-            if (!detalhe) return '';
-
-            const { title, description } = detalhe;
-            if (!title) return '';
-            
-            return `
-                <div class="modal-section">
-                    <h3 class="modal-section-title subtitulo">${title}</h3>
-                    <p class="textos-longos">${description || ''}</p>
-                </div>
-            `;
-        },
-
-        // Gera o HTML para os links de demonstração e GitHub
-        gerarHtmlLinks(demoLink, githubLink) {
-            let linksHTML = ''; // Gera os links de demonstração e GitHub
-
-            if (demoLink && demoLink.trim().includes("/")) // Só adiciona o link de demonstração se existir
-                linksHTML += `<a href="${demoLink}" target="_blank" rel="noopener noreferrer" class="btn add-background-accent-high add-background-accent-hover add-border-accent-hover icon-left-external">Demonstração</a>`;
-
-            if (githubLink && githubLink.trim().includes("/")) // Só adiciona o link do GitHub se existir
-                linksHTML += `<a href="${githubLink}" target="_blank" rel="noopener noreferrer" class="btn add-background-accent-high add-background-accent-hover add-border-accent-hover icon-left-github">GitHub</a>`;
-            
-            return linksHTML;
-        },
-
-        // Preenche o modal com as informações de texto do projeto
-        preencherConteudoDeTextoDoModal(projeto) {
-            const { title, details, demoLink, githubLink } = projeto;
-
-            this.elementos.tituloModal.textContent = title;
-
-            // Usa a função dedicada para gerar o HTML das secções de detalhes
-            this.elementos.detalhesModal.innerHTML = this.gerarHtmlDetalhes(details);
-
-            this.elementos.linksModal.innerHTML = this.gerarHtmlLinks(demoLink, githubLink);
+            // (Removido) Listener de resize relacionado ao header-scroll
         },
 
         // Carrega as miniaturas de forma assíncrona
@@ -624,6 +670,16 @@ const App = {
                         <img src="${urlDaImagem}" alt="Miniatura ${indice + 1}" loading="lazy">
                     </button>`;
                 this.elementos.miniaturasModal.insertAdjacentHTML('beforeend', miniaturaHtml);
+                const btn = this.elementos.miniaturasModal.lastElementChild;
+                const img = btn && btn.querySelector('img');
+                if (img) {
+                    img.addEventListener('error', () => {
+                        btn.remove();
+                        if (!this.elementos.miniaturasModal.querySelector('button')) {
+                            this.tentarAvancarImagemOuOcultar && this.tentarAvancarImagemOuOcultar();
+                        }
+                    });
+                }
             });
         },
 
@@ -648,6 +704,103 @@ const App = {
             this.estado.indiceImagemAtual = indiceCalculado;
 
             // Atualiza a imagem principal do modal
+            if (this.elementos.imagemPrincipalModal)
+                this.elementos.imagemPrincipalModal.classList.remove('is-broken');
+            this.elementos.imagemPrincipalModal.src = this.estado.imagensDoProjetoAtual[indiceCalculado];
+            this.elementos.imagemPrincipalModal.alt = `Imagem ${indiceCalculado + 1} do projeto ${this.estado.projetoAtual.title || this.estado.projetoAtual.repo}`; // Atualiza o texto da imagem.
+
+            // Atualiza a visibilidade das setas se não estiver em loop
+            if (!this.ImagensEmLoop) {
+
+                // Esconde/mostra a seta "anterior" se estiver no início.
+                if((indiceCalculado === 0))
+                    this.elementos.botaoAnterior.style.display = 'none';
+                else
+                    this.elementos.botaoAnterior.style.display = '';
+
+                // Esconde/mostra a seta "próximo" se estiver no fim.
+                if((indiceCalculado === totalImagens - 1))
+                    this.elementos.botaoProximo.style.display = 'none';
+                else
+                    this.elementos.botaoProximo.style.display = '';
+            }
+
+            // Pega todos os botões das miniaturas.
+            const todasAsMiniaturas = this.elementos.miniaturasModal.querySelectorAll('button');
+
+            // Seleciona a miniatura correspondente à imagem atual e destaca-a
+            for (const botaoMiniatura of todasAsMiniaturas) { // Percorre cada botão de miniatura.
+
+                // Compara o índice desta miniatura com o índice da imagem que estamos a mostrar.
+                if (Number(botaoMiniatura.dataset.index) === indiceCalculado)
+                    botaoMiniatura.classList.add('active'); // Se for a miniatura correta, adiciona a classe 'active' para a destacar.
+                else
+                    botaoMiniatura.classList.remove('active'); // Se não for, remove a classe 'active' para garantir que não fica destacada.
+            }
+        },
+
+        // Preenche o modal com as informações de texto do projeto
+        preencherConteudoDeTextoDoModal(projeto) {
+            const { repo, demoLink, githubLink, description_html } = projeto;
+            const tituloModal = projeto.title || projeto.repo || 'Projeto sem título';
+            const tagsArray = this.obterTags(projeto);
+            const tagsHtml = tagsArray.map(tag => `<span class="modal-header-tag">${this.escapeHtml(String(tag))}</span>`).join('');
+            if (this.elementos.modalTags) this.elementos.modalTags.innerHTML = tagsHtml;
+            if (this.elementos.modalTagsBlock) this.elementos.modalTagsBlock.style.display = tagsArray.length ? '' : 'none';
+            if (this.elementos.tituloModal) this.elementos.tituloModal.innerHTML = `<span class="modal-title-text">${this.escapeHtml(String(tituloModal))}</span>`;
+            let conteudoHTML = '';
+            if (description_html && description_html.trim()) conteudoHTML = `<div class="modal-section">${description_html}</div>`;
+            else conteudoHTML = `<div class="modal-section"><p>Informações detalhadas não disponíveis.</p></div>`;
+            this.elementos.detalhesModal.innerHTML = conteudoHTML;
+            this.elementos.linksModal.innerHTML = this.gerarHtmlLinks(demoLink, githubLink, repo);
+        },
+        
+
+        // Carrega as miniaturas de forma assíncrona
+        carregarMiniaturasAsync(listaDeImagens) {
+            this.elementos.miniaturasModal.innerHTML = ''; // Limpa as miniaturas antigas
+
+            listaDeImagens.forEach((urlDaImagem, indice) => {
+                const miniaturaHtml = `
+                    <button type="button" data-index="${indice}" class="add-filter-brightness-90">
+                        <img src="${urlDaImagem}" alt="Miniatura ${indice + 1}" loading="lazy">
+                    </button>`;
+                this.elementos.miniaturasModal.insertAdjacentHTML('beforeend', miniaturaHtml);
+                const btn = this.elementos.miniaturasModal.lastElementChild;
+                const img = btn && btn.querySelector('img');
+                if (img) {
+                    img.addEventListener('error', () => {
+                        btn.remove();
+                        if (!this.elementos.miniaturasModal.querySelector('button'))
+                            this.tentarAvancarImagemOuOcultar && this.tentarAvancarImagemOuOcultar();
+                    });
+                }
+            });
+        },
+
+        // Atualiza a imagem principal e a miniatura ativa no modal
+        mudarImagemModal(novoIndice) {
+            const totalImagens = this.estado.imagensDoProjetoAtual.length;
+
+            if (totalImagens === 0) return; // Sai da função se não houver imagens para mostrar
+
+            let indiceCalculado = novoIndice; // Começa assumindo que o novo índice é válido
+
+            if(!this.ImagensEmLoop) { // Se as imagens estiverem em loop
+                indiceCalculado = Math.max(0, Math.min(novoIndice, totalImagens - 1)); // Garante que o índice está dentro dos limites
+            } else {
+                // Corrige o índice se estiver fora dos limites
+                if (novoIndice >= totalImagens) // Volta ao início se passar da última imagem
+                    indiceCalculado = 0; // voltamos para o início (índice 0)
+                else if (novoIndice < 0) // Se o novo índice for negativo
+                    indiceCalculado = totalImagens - 1; // vamos para o final da lista
+            }
+
+            this.estado.indiceImagemAtual = indiceCalculado;
+
+            // Atualiza a imagem principal do modal
+            if (this.elementos.imagemPrincipalModal)
+                this.elementos.imagemPrincipalModal.classList.remove('is-broken');
             this.elementos.imagemPrincipalModal.src = this.estado.imagensDoProjetoAtual[indiceCalculado];
             this.elementos.imagemPrincipalModal.alt = `Imagem ${indiceCalculado + 1} do projeto ${this.estado.projetoAtual.title}`; // Atualiza o texto da imagem.
 
@@ -679,6 +832,38 @@ const App = {
                 else
                     botaoMiniatura.classList.remove('active'); // Se não for, remove a classe 'active' para garantir que não fica destacada.
             }
+        },
+        RegistarFalhasNoCarregamentoDeImagens() {
+            if (!this.elementos.containerProjetos) return;
+            const imagens = this.elementos.containerProjetos.querySelectorAll('img.card-image');
+            imagens.forEach(img => {
+                const aplicarFallback = () => {
+                    const card = img.closest('.project-card');
+                    if (card) {
+                        card.classList.add('no-image');
+                        img.remove();
+                    }
+                };
+                img.addEventListener('error', aplicarFallback, { once: true });
+                if (!img.getAttribute('src') || img.getAttribute('src').trim() === '') 
+                    aplicarFallback();
+            });
+        },
+        tentarAvancarImagemOuOcultar() {
+            const imgs = this.estado.imagensDoProjetoAtual;
+            if (!Array.isArray(imgs) || imgs.length === 0) 
+                return this._ocultarViewerPorFalha();
+
+            this.estado.tentativasErroImagem = (this.estado.tentativasErroImagem || 0) + 1;
+            if (this.estado.tentativasErroImagem >= imgs.length) 
+                return this._ocultarViewerPorFalha();
+
+            this.mudarImagemModal(this.estado.indiceImagemAtual + 1);
+        },
+
+        _ocultarViewerPorFalha() {
+            if (this.elementos.modalImagesSection)
+                this.elementos.modalImagesSection.classList.add('hidden');
         },
     },
 
@@ -885,6 +1070,40 @@ const App = {
             // Verifica se a função inicializada no index.html existe
             // Se existir, chama-a para atualizar a cor da barra do navegador
             if (typeof setThemeColorByTheme === 'function') { setThemeColorByTheme(novoTema); }
+        }
+    }
+    ,
+
+    // Módulo Easter-egg: abre o projeto do portfolio quando o avatar é clicado 10 vezes
+    easter_egg: {
+        contador: 0,
+        limite: 10,
+        selector: '.inicio-photo',
+        init() {
+            // Regista o listener no document para garantir que funciona mesmo que o avatar seja adicionado depois
+            document.addEventListener('click', (imagem) => {
+                let avatar = null;
+
+                if(imagem.target.closest)
+                    avatar = imagem.target.closest(this.selector);
+
+                if (!avatar)
+                    return;
+
+                this.contador += 1;
+                if (this.contador >= this.limite) {
+                    this.contador = 0;
+                    // procura o projeto do portfolio por githubLink OU demoLink e abre o modal
+                    const projeto = App.projetos.dadosProjetos.find(p => 
+                        (p.githubLink && p.githubLink.includes('tiago-daniel-guerreiro.github.io')) ||
+                        (p.demoLink && p.demoLink.includes('tiago-daniel-guerreiro.github.io'))
+                    );
+                    if (projeto)
+                        App.projetos.abrirModal(projeto.id);
+                    else
+                        console.warn('Projeto de portfolio não encontrado para easter-egg.');
+                }
+            });
         }
     }
 };
