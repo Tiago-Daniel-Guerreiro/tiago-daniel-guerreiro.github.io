@@ -388,7 +388,7 @@
     flex-wrap: wrap;
     z-index: 1;
     margin: 0;
-    padding: 0;
+    padding: 0 1rem;
   }
 
   .header-inner {
@@ -796,10 +796,13 @@
     box-shadow: var(--shadow-small);
     display: flex;
     flex-direction: column;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: transform 0.5s ease, 
+                box-shadow 0.5s ease,
+                background-color 0.65s ease, color 0.4s ease, border-color 0.5s ease;
+
   }
 
-  .project-card:hover { transform: translateY(-4px); }
+  .project-card:hover { transform: translateY(-6px); }
   .project-card.no-image .card-image { display: none; }
   .project-card.no-image .card-content { padding-top: 1rem; }
 
@@ -906,10 +909,13 @@
 
   .modal-title { 
     font-size: var(--font-size-subtitle);
-    font-weight:700; 
-    margin:0; 
-    display: block;
-    min-width: 0;
+    font-weight: 700;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100%;
+    text-align: left;
   } 
 
   .modal-tags  { 
@@ -1111,7 +1117,7 @@
   }
 
   @media (max-width: 600px) {
-    .modal-title { font-size: var(--font-size);}
+    .modal-title { font-size: calc(var(--font-size-subtitle)*0.85);}
     .modal-body p, .modal-body li { font-size: var(--font-size); }
 
     .project-modal.active {
