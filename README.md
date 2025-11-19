@@ -1,4 +1,4 @@
-# Portfólio Pessoal | tiago-daniel-guerreiro.github.io
+# Portfólio
 
 ![Technologies](https://img.shields.io/badge/Tech-HTML%20%7C%20CSS%20%7C%20JS-blue.svg)
 ![Data Script](https://img.shields.io/badge/Data%20Script-Python-yellow.svg)
@@ -10,7 +10,7 @@ O grande objetivo foi criar um espaço controlado para contar a minha história 
 
 **Visite:** [**tiago-daniel-guerreiro.github.io**](https://tiago-daniel-guerreiro.github.io)
 
-## 🚀 Tecnologias e Arquitetura
+## 🚀 Tecnologias
 
 Este projeto foi construído intencionalmente **sem frameworks front-end** para demonstrar um forte domínio dos fundamentos do desenvolvimento web e para ter um maior controle e liberdade no desenvolvimento.
 
