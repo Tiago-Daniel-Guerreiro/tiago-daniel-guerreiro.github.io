@@ -258,7 +258,7 @@ const App = {
                 "repo": "tiago-daniel-guerreiro.github.io",
                 "coverImage": null,
                 "images": null,
-                "demoLink": "https://tiago-daniel-guerreiro.github.io",
+                "demoLink": null,
                 "tags": ["CSS", "JavaScript","HTML"],
                 "showInCards": false
             }
