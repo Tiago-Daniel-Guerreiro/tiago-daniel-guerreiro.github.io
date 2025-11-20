@@ -271,6 +271,10 @@ const App = {
             imagensDoProjetoAtual: [],
         },
 
+        // Flags internas para gerir o histórico do navegador quando o modal está aberto
+        _pushedState: false,
+        _closingFromPop: false,
+
         // Armazena referências aos elementos da página para evitar buscas repetidas
         elementos: {
             containerProjetos: document.querySelector('.projects-container'),
@@ -300,9 +304,44 @@ const App = {
             this.CarregarCardsDeProjetos();
             this.RegistarFalhasNoCarregamentoDeImagens();
             this.vincularEventos();
+            this.verificarUrl();
         },
 
-        // Tenta ler o arquivo gerado pelo script Python (data/github_projects.json)
+        // Verifica a URL atual (hash) e abre o modal se for um link do tipo #<id> (numérico)
+        // Também aceita o formato antigo '#projeto-<id>' como compatibilidade
+        verificarUrl() {
+            try {
+                const hash = (window.location.hash || '').toString();
+                if (!hash) return;
+
+                let idStr = null;
+
+                // Caso novo: hash apenas numérico, ex: '#4'
+                const numericMatch = hash.match(/^#(\d+)$/);
+                if (numericMatch) {
+                    idStr = numericMatch[1];
+                } else {
+                    // Compatibilidade com formato antigo: '#projeto-<id>'
+                    const projMatch = hash.match(/^#projeto-(\d+)$/);
+                    if (projMatch) idStr = projMatch[1];
+                }
+
+                if (!idStr) return;
+
+                const idNum = Number(idStr);
+                if (!Number.isNaN(idNum) && Number.isInteger(idNum)) {
+                    const projeto = this.obterProjetoPorId(idNum);
+                    if (projeto) {
+                        // Abrir sem empurrar novo estado (já estamos com esse hash)
+                        this.abrirModal(projeto.id, false);
+                    }
+                }
+            } catch (err) {
+                console.error('Erro ao verificar o hash da URL para abrir modal:', err);
+            }
+        }
+,
+    // Tenta ler o arquivo gerado pelo script Python (data/github_projects.json)
         async loadLocalGithubData() {
             const path = '/data/github_projects.json';
             let resp;
@@ -540,6 +579,43 @@ const App = {
             
             // Quando uma tecla é pressionada, o método é chamado e lida com a lógica
             document.addEventListener('keydown', (evento) => this.lidarTeclaPressionada(evento));
+
+            
+            // Fecha o modal quando o utilizador pressiona "Voltar" no navegador (popstate)
+            // Se o modal estiver aberto, interpretamos o popstate como pedido para fechar o modal
+            window.addEventListener('popstate', (event) => {
+                try {
+                    const state = event.state;
+
+                    // Se o state indica que o modal deve estar aberto, abre-o (sem empurrar history)
+                    if (state && state.modalOpen && state.projectId) {
+                        if (!(this.elementos && this.elementos.modal && this.elementos.modal.classList.contains('active'))) {
+                            this.abrirModal(state.projectId, false);
+                        }
+                        return;
+                    }
+
+                    // Se o hash atual é numérico (#<id>), abre o modal correspondente
+                    const hash = (window.location.hash || '').toString();
+                    const numericMatch = hash.match(/^#(\d+)$/);
+                    if (numericMatch) {
+                        const idNum = Number(numericMatch[1]);
+                        if (!Number.isNaN(idNum) && !this.elementos.modal.classList.contains('active')) {
+                            this.abrirModal(idNum, false);
+                            return;
+                        }
+                    }
+
+                    // Caso contrário, se o modal estiver aberto, fechamos (voltar do browser)
+                    if (this.elementos && this.elementos.modal && this.elementos.modal.classList.contains('active')) {
+                        this._closingFromPop = true;
+                        this.fecharModal();
+                        this._closingFromPop = false;
+                    }
+                } catch (err) {
+                    console.error('Erro ao tratar popstate para modal:', err);
+                }
+            });
         },
 
         //Vincula os eventos de clique aos elementos do modal
@@ -598,7 +674,9 @@ const App = {
         },
 
         // Prepara e abre o modal com os dados de um projeto específico
-        abrirModal(projetoId) {
+        // projetoId: número identificador do projeto
+        // pushHistory: se true (padrão) empurra um novo estado no history com /<id>
+        abrirModal(projetoId, pushHistory = true) {
             const projeto = this.obterProjetoPorId(projetoId);
 
             if (!projeto) // Se o projeto não for encontrado, sai da função
@@ -630,9 +708,26 @@ const App = {
             // Torna o modal visível
             this.elementos.modal.classList.add('active');
             document.body.style.overflow = 'hidden'; // Trava o scroll da página
+
+            // Adiciona um estado extra ao histórico (sem alterar a URL) para que o botão "Voltar" feche o modal
+            if (pushHistory) {
+                try {
+                    // empurra o state com um hash '#<id>' (numérico) — não provoca scroll automático e identifica o modal
+                    const hash = '#' + encodeURIComponent(String(projeto.id));
+                    history.pushState({ modalOpen: true, projectId: projeto.id }, "", hash);
+                    this._pushedState = true;
+                } catch (err) {
+                    // Se o navegador não permitir, apenas seguimos sem histórico
+                    console.warn('Não foi possível empurrar estado para o history:', err);
+                    this._pushedState = false;
+                }
+            } else {
+                // Abrido sem empurrar history (por ex. carregado directamente via URL)
+                this._pushedState = false;
+            }
         },
 
-        // Sanitiza e normaliza a lista de imagens de um projeto (cover + images)
+        // Formata e normaliza a lista de imagens de um projeto (cover + images)
         _prepararListaDeImagens(projeto) {
             let resultados = [];
             const adicionar = (valor) => {
@@ -649,15 +744,36 @@ const App = {
         // Fecha o modal e limpa o estado.
         fecharModal() {
             if (!this.elementos.modal) return;
+            // Se estivermos a fechar por causa de um popstate, apenas fechamos o modal
+            if (this._closingFromPop) {
+                this.elementos.modal.classList.remove('active');
+                document.body.style.overflow = ''; // Restaura o scroll
+                this.estado.projetoAtual = null;
+                this.estado.imagensDoProjetoAtual = [];
+                if (this.elementos.miniaturasModal) this.elementos.miniaturasModal.innerHTML = ''; // Limpa miniaturas
+                // Depois de fecharmos por popstate, já não temos o estado empurrado
+                this._pushedState = false;
+                return;
+            }
 
+            // Se o modal abriu um estado no history, volta um passo no histórico para remover esse estado
+            if (this._pushedState) {
+                try {
+                    history.back();
+                    // A verdadeira remoção/fecho do modal será feita no handler de popstate
+                    return;
+                } catch (err) {
+                    console.warn('Erro ao fazer history.back() ao fechar modal:', err);
+                    // Se falhar, fechamos normalmente
+                }
+            }
+
+            // Fecho normal quando não houve estado no history
             this.elementos.modal.classList.remove('active');
             document.body.style.overflow = ''; // Restaura o scroll
-            
-            // Limpa o estado
             this.estado.projetoAtual = null;
             this.estado.imagensDoProjetoAtual = [];
-            this.elementos.miniaturasModal.innerHTML = ''; // Limpa miniaturas
-            // (Removido) Listener de resize relacionado ao header-scroll
+            if (this.elementos.miniaturasModal) this.elementos.miniaturasModal.innerHTML = ''; // Limpa miniaturas
         },
 
         // Carrega as miniaturas de forma assíncrona
