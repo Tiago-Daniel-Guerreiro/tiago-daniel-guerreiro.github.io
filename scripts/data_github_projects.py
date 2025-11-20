@@ -5,6 +5,7 @@ import time
 import argparse
 import requests
 import markdown
+from typing import Optional
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -30,7 +31,7 @@ class ClienteGithub:
     Responsável por realizar chamadas HTTP à API do GitHub ou a URLs raw.
     Gerencia cabeçalhos de autenticação e sessões.
     """
-    def __init__(self, token: str = None):
+    def __init__(self, token: Optional[str] = None):
         self.sessao = requests.Session()
         self.sessao.headers.update({'Accept': 'application/vnd.github.v3+json'})
         if token:
@@ -66,7 +67,8 @@ class ClienteGithub:
         """
         # Tentativa 1: Via API (mais estável para metadados)
         url_api = f'https://api.github.com/repos/{dono}/{repositorio}/readme'
-        headers_personalizados = self.sessao.headers.copy()
+        # self.sessao.headers pode ser um Mapping; usar dict(...) evita warnings de tipo
+        headers_personalizados = dict(self.sessao.headers)
         headers_personalizados['Accept'] = 'application/vnd.github.v3.raw'
 
         try:
@@ -367,7 +369,10 @@ class FormatadorHtml:
             if '<ul' in bloco_li or '<ol' in bloco_li:
                 return bloco_li
             
-            conteudo_interno = re.match(r'<li>([\s\S]*?)</li>', bloco_li).group(1)
+            m = re.match(r'<li>([\s\S]*?)</li>', bloco_li)
+            if not m:
+                return bloco_li
+            conteudo_interno = m.group(1)
             if ' - ' not in conteudo_interno:
                 return bloco_li
             
@@ -380,7 +385,8 @@ class FormatadorHtml:
 
         return re.sub(r'<li>[\s\S]*?</li>', _expandir, html)
 
-    def limpeza_final(self, html: str, nome_repositorio: str) -> str:
+    def limpeza_final(self, html: Optional[str], nome_repositorio: str) -> str:
+        # aceita None como entrada e normaliza para string vazia
         if not html: return ""
         
         html = self.limpar_emblemas_e_imagens_status(html)
@@ -438,7 +444,7 @@ class GerenciadorDeRepositorios:
         try:
             info_api = self.cliente_github.buscar_metadados_repositorio(dono, nome_repositorio)
             if isinstance(info_api, dict):
-                dados_saida['description'] = info_api.get('description')
+                dados_saida['description'] = info_api.get('description') or ""
                 branch_padrao = info_api.get('default_branch')
         except Exception as e:
             print(f'  AVISO METADADOS: falha ao obter api.github.com ({e}). Prosseguindo com fallback raw...')
@@ -462,8 +468,8 @@ class GerenciadorDeRepositorios:
                 # Higienização do HTML
                 html_final = self.higienizador.limpeza_final(html_gerado, nome_repositorio)
 
-                dados_saida['title'] = titulo
-                dados_saida['description_html'] = html_final
+                dados_saida['title'] = titulo or ""
+                dados_saida['description_html'] = html_final or ""
             except Exception as e:
                 print(f'  AVISO PROCESSAMENTO: falha ao processar README ({e}).')
         else:
