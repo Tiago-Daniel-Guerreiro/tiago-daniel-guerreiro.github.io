@@ -320,10 +320,6 @@ const App = {
                 const numericMatch = hash.match(/^#(\d+)$/);
                 if (numericMatch) {
                     idStr = numericMatch[1];
-                } else {
-                    // Compatibilidade com formato antigo: '#projeto-<id>'
-                    const projMatch = hash.match(/^#projeto-(\d+)$/);
-                    if (projMatch) idStr = projMatch[1];
                 }
 
                 if (!idStr) return;
@@ -740,6 +736,17 @@ const App = {
             if (Array.isArray(projeto.images)) for (const img of projeto.images) adicionar(img);
             return resultados;
         },
+        retirarIdUrl() {
+                // Remove o hash numérico do URL sem criar nova entrada no histórico.
+                // Usamos replaceState porque:
+                // - não queremos adicionar uma nova entrada ao history (evita poluir o Back);
+                // - não disparará 'popstate', portanto não causa efeitos colaterais como reabrir o modal.
+                try {
+                    if (/^#\d+$/.test((window.location.hash || '').toString())) {
+                        history.replaceState(null, "", window.location.pathname + window.location.search);
+                    }
+                } catch (e) { }
+        },
 
         // Fecha o modal e limpa o estado.
         fecharModal() {
@@ -753,6 +760,9 @@ const App = {
                 if (this.elementos.miniaturasModal) this.elementos.miniaturasModal.innerHTML = ''; // Limpa miniaturas
                 // Depois de fecharmos por popstate, já não temos o estado empurrado
                 this._pushedState = false;
+
+                // Se por algum motivo ainda existe um hash numérico na URL, removemos
+                this.retirarIdUrl()
                 return;
             }
 
@@ -761,6 +771,10 @@ const App = {
                 try {
                     history.back();
                     // A verdadeira remoção/fecho do modal será feita no handler de popstate
+                    // Pequeno fallback: se após um intervalo o hash numérico continuar presente (navegador não mudou), removemos por replaceState
+                    setTimeout(() => {
+                        this.retirarIdUrl()
+                    }, 250);
                     return;
                 } catch (err) {
                     console.warn('Erro ao fazer history.back() ao fechar modal:', err);
@@ -774,6 +788,7 @@ const App = {
             this.estado.projetoAtual = null;
             this.estado.imagensDoProjetoAtual = [];
             if (this.elementos.miniaturasModal) this.elementos.miniaturasModal.innerHTML = ''; // Limpa miniaturas
+            try { this.retirarIdUrl(); } catch (e) {}
         },
 
         // Carrega as miniaturas de forma assíncrona
